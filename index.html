@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThesisPoint — Research help, without the campus visit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B3D62;
+    --navy-deep:#082C48;
+    --teal:#12879A;
+    --orange:#F2A93B;
+    --bg:#F7F9FA;
+    --ink:#132532;
+    --slate:#5B6B75;
+    --line:#E3E8EA;
+    --white:#FFFFFF;
+    --serif:'Source Serif 4', Georgia, serif;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:var(--sans);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+  button{ font-family:inherit; cursor:pointer; }
+  :focus-visible{ outline:2.5px solid var(--teal); outline-offset:3px; }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,249,250,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--serif); font-weight:700; font-size:1.28rem; color:var(--navy); text-decoration:none; }
+  .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--orange); }
+  .nav-links{ display:flex; align-items:center; gap:36px; list-style:none; }
+  .nav-links a{ text-decoration:none; color:var(--slate); font-size:0.96rem; font-weight:500; transition:color .15s; }
+  .nav-links a:hover{ color:var(--navy); }
+  .nav-cta{
+    background:var(--navy); color:#fff; border:none; padding:11px 22px; border-radius:8px;
+    font-weight:600; font-size:0.92rem; text-decoration:none; display:inline-block;
+    transition:background .15s, transform .15s;
+  }
+  .nav-cta:hover{ background:var(--navy-deep); transform:translateY(-1px); }
+  .nav-toggle{ display:none; background:none; border:none; padding:8px; }
+  .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{
+    content:''; display:block; width:22px; height:2px; background:var(--navy); position:relative; transition:.2s;
+  }
+  .nav-toggle span::before{ position:absolute; top:-7px; }
+  .nav-toggle span::after{ position:absolute; top:7px; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:76px 0 88px; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:start; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--teal); font-weight:600; font-size:0.86rem; letter-spacing:0.03em;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{ content:''; width:16px; height:1.5px; background:var(--teal); }
+  h1{
+    font-family:var(--serif); font-weight:700; color:var(--navy);
+    font-size:3.15rem; line-height:1.08; letter-spacing:-0.01em; max-width:11.5ch;
+  }
+  h1 em{ font-style:italic; color:var(--teal); }
+  .hero-sub{
+    margin-top:22px; font-size:1.14rem; color:var(--slate); max-width:46ch; line-height:1.6;
+  }
+  .hero-meta{
+    margin-top:28px; font-size:0.92rem; color:var(--slate);
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .hero-meta strong{ color:var(--navy); }
+  .stat-row{ display:flex; gap:36px; margin-top:40px; padding-top:28px; border-top:1px solid var(--line); }
+  .stat b{ display:block; font-family:var(--serif); font-size:1.9rem; color:var(--navy); font-weight:700; }
+  .stat span{ font-size:0.84rem; color:var(--slate); }
+
+  /* ---------- QUOTE WIDGET ---------- */
+  .quote-card{
+    background:var(--navy); border-radius:18px; padding:32px;
+    box-shadow:0 24px 48px -18px rgba(11,61,98,0.45);
+    position:relative; overflow:hidden;
+  }
+  .quote-card::after{
+    content:''; position:absolute; top:-60px; right:-60px; width:180px; height:180px;
+    border-radius:50%; background:radial-gradient(circle, rgba(18,135,154,0.5), transparent 70%);
+  }
+  .quote-head{ position:relative; margin-bottom:22px; }
+  .quote-head h3{ font-family:var(--serif); color:#fff; font-size:1.32rem; font-weight:600; }
+  .quote-head p{ color:#B9CBDA; font-size:0.88rem; margin-top:4px; }
+  .field{ position:relative; margin-bottom:16px; }
+  .field label{ display:block; color:#B9CBDA; font-size:0.78rem; font-weight:600; letter-spacing:0.02em; margin-bottom:7px; }
+  .field select, .field input{
+    width:100%; padding:12px 14px; border-radius:9px; border:1px solid rgba(255,255,255,0.16);
+    background:rgba(255,255,255,0.07); color:#fff; font-size:0.94rem; font-family:inherit;
+    appearance:none; -webkit-appearance:none;
+  }
+  .field select option{ color:#132532; }
+  .field.select-wrap::after{
+    content:'▾'; position:absolute; right:14px; bottom:13px; color:#B9CBDA; font-size:0.8rem; pointer-events:none;
+  }
+  .field input::placeholder{ color:#8FA6B6; }
+  .quote-result{
+    margin-top:22px; padding:18px; border-radius:12px; background:rgba(255,255,255,0.08);
+    border:1px dashed rgba(255,255,255,0.25);
+  }
+  .quote-result .label{ color:#B9CBDA; font-size:0.78rem; font-weight:600; }
+  .quote-result .price{ font-family:var(--serif); color:#fff; font-size:1.9rem; font-weight:700; margin-top:4px; }
+  .quote-result .price span{ font-size:1rem; color:#B9CBDA; font-weight:400; font-family:var(--sans); }
+  .quote-note{ color:#8FA6B6; font-size:0.78rem; margin-top:8px; }
+  .quote-cta{
+    margin-top:18px; width:100%; background:var(--orange); color:var(--navy-deep); border:none;
+    padding:14px; border-radius:9px; font-weight:700; font-size:0.96rem;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:transform .15s, box-shadow .15s;
+    text-decoration:none;
+  }
+  .quote-cta:hover{ transform:translateY(-2px); box-shadow:0 10px 24px -8px rgba(242,169,59,0.6); }
+  .quote-cta svg{ width:18px; height:18px; }
+
+  /* ---------- SECTION SHARED ---------- */
+  section{ padding:88px 0; }
+  .section-head{ max-width:640px; margin-bottom:52px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  h2{ font-family:var(--serif); font-weight:700; color:var(--navy); font-size:2.1rem; line-height:1.18; }
+  .section-head p{ margin-top:14px; color:var(--slate); font-size:1.05rem; line-height:1.6; }
+
+  /* ---------- SERVICES ---------- */
+  .services{ background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .svc-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+  .svc-card{
+    background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:26px 22px;
+    transition:border-color .15s, transform .15s;
+  }
+  .svc-card:hover{ border-color:var(--teal); transform:translateY(-3px); }
+  .svc-icon{
+    width:46px; height:46px; border-radius:11px; background:var(--navy);
+    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+  }
+  .svc-icon svg{ width:22px; height:22px; stroke:#fff; fill:none; stroke-width:1.8; }
+  .svc-card h4{ font-size:1.02rem; color:var(--navy); font-weight:700; margin-bottom:9px; }
+  .svc-card p{ color:var(--slate); font-size:0.9rem; line-height:1.55; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+  .how-grid::before{
+    content:''; position:absolute; top:23px; left:8%; right:8%; height:1px;
+    background:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px);
+  }
+  .how-step{ position:relative; padding-right:20px; }
+  .how-num{
+    width:46px; height:46px; border-radius:50%; background:var(--white); border:1.5px solid var(--navy);
+    color:var(--navy); font-family:var(--serif); font-weight:700; font-size:1.15rem;
+    display:flex; align-items:center; justify-content:center; margin-bottom:20px; position:relative; z-index:1;
+  }
+  .how-step h4{ color:var(--navy); font-size:1.02rem; font-weight:700; margin-bottom:8px; }
+  .how-step p{ color:var(--slate); font-size:0.9rem; line-height:1.55; }
+
+  /* ---------- PRICING ---------- */
+  .pricing{ background:var(--navy); color:#fff; }
+  .pricing .section-head p{ color:#B9CBDA; }
+  .pricing .eyebrow{ color:var(--orange); }
+  .pricing .eyebrow::before{ background:var(--orange); }
+  .pricing h2{ color:#fff; }
+  .price-table{ width:100%; border-collapse:collapse; }
+  .price-table th{
+    text-align:left; font-size:0.78rem; letter-spacing:0.03em; color:#8FA6B6; font-weight:600;
+    padding:0 0 14px; border-bottom:1px solid rgba(255,255,255,0.16); text-transform:uppercase;
+  }
+  .price-table td{ padding:20px 0; border-bottom:1px solid rgba(255,255,255,0.1); vertical-align:top; }
+  .price-table td:last-child{ text-align:right; font-family:var(--serif); font-weight:600; font-size:1.05rem; white-space:nowrap; padding-left:20px; }
+  .price-table tr:last-child td{ border-bottom:none; }
+  .svc-name{ font-weight:600; font-size:0.98rem; }
+  .svc-desc{ color:#B9CBDA; font-size:0.86rem; margin-top:4px; }
+  .price-table tr.featured td{ padding-top:24px; }
+  .price-note{ margin-top:28px; color:#8FA6B6; font-size:0.86rem; max-width:56ch; }
+
+  /* ---------- WHY ---------- */
+  .why-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .why-item{ display:flex; gap:16px; padding:24px; background:var(--white); border:1px solid var(--line); border-radius:14px; }
+  .why-check{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%; background:rgba(18,135,154,0.1);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .why-check svg{ width:16px; height:16px; stroke:var(--teal); fill:none; stroke-width:2.4; }
+  .why-item h4{ color:var(--navy); font-size:1rem; font-weight:700; margin-bottom:6px; }
+  .why-item p{ color:var(--slate); font-size:0.9rem; line-height:1.55; }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  footer{ background:var(--navy-deep); color:#fff; padding:72px 0 32px; }
+  .foot-grid{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:48px; padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,0.12); }
+  .foot-brand .brand{ color:#fff; }
+  .foot-brand p{ margin-top:16px; color:#8FA6B6; font-size:0.92rem; max-width:34ch; line-height:1.6; }
+  .foot-col h5{ font-size:0.8rem; letter-spacing:0.03em; text-transform:uppercase; color:#8FA6B6; font-weight:600; margin-bottom:16px; }
+  .foot-col a{ display:flex; align-items:center; gap:10px; text-decoration:none; color:#E7EEF2; font-size:0.94rem; margin-bottom:14px; transition:color .15s; }
+  .foot-col a:hover{ color:var(--orange); }
+  .foot-col a svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.8; flex-shrink:0; }
+  .foot-bottom{ padding-top:28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; color:#8FA6B6; font-size:0.84rem; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px){
+    .wrap{ padding:0 22px; }
+    .nav-links{ position:fixed; top:76px; left:0; right:0; background:var(--bg); flex-direction:column; align-items:flex-start; gap:0; padding:8px 22px 20px; border-bottom:1px solid var(--line); transform:translateY(-8px); opacity:0; pointer-events:none; transition:.18s; }
+    .nav-links.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+    .nav-links li{ width:100%; border-top:1px solid var(--line); }
+    .nav-links a{ display:block; padding:14px 0; }
+    .nav-links .nav-cta{ margin:14px 0 6px; text-align:center; }
+    .nav-toggle{ display:block; }
+    .hero-grid{ grid-template-columns:1fr; }
+    h1{ font-size:2.35rem; max-width:none; }
+    .stat-row{ gap:24px; flex-wrap:wrap; }
+    .svc-grid{ grid-template-columns:repeat(2,1fr); }
+    .how-grid{ grid-template-columns:repeat(2,1fr); row-gap:32px; }
+    .how-grid::before{ display:none; }
+    .why-grid{ grid-template-columns:1fr; }
+    .foot-grid{ grid-template-columns:1fr; gap:32px; }
+    .price-table td:last-child{ padding-left:10px; }
+  }
+  @media (max-width: 520px){
+    .svc-grid{ grid-template-columns:1fr; }
+    h1{ font-size:2rem; }
+  }
+
+  /* ---------- AI CHAT WIDGET ---------- */
+  #chatToggle{
+    position:fixed; bottom:22px; right:22px; z-index:200;
+    width:60px; height:60px; border-radius:50%; border:none;
+    background:var(--navy); color:#fff; box-shadow:0 14px 28px -10px rgba(11,61,98,0.5);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .15s;
+  }
+  #chatToggle:hover{ transform:translateY(-2px); }
+  #chatToggle svg{ width:26px; height:26px; stroke:#fff; fill:none; stroke-width:1.8; }
+
+  #chatPanel{
+    position:fixed; bottom:96px; right:22px; z-index:200;
+    width:min(380px, calc(100vw - 32px)); height:min(560px, calc(100vh - 140px));
+    background:#fff; border-radius:18px; box-shadow:0 30px 60px -20px rgba(0,0,0,0.35);
+    display:none; flex-direction:column; overflow:hidden; border:1px solid var(--line);
+  }
+  #chatPanel.open{ display:flex; }
+  .chat-head{ background:var(--navy); color:#fff; padding:16px 18px; display:flex; align-items:center; justify-content:space-between; }
+  .chat-head div{ font-weight:700; font-family:var(--serif); }
+  .chat-head span{ display:block; font-size:0.76rem; color:#B9CBDA; font-weight:400; font-family:var(--sans); margin-top:2px; }
+  .chat-close{ background:none; border:none; color:#fff; opacity:0.8; padding:4px; }
+  .chat-close svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; }
+
+  #chatMessages{ flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:12px; background:var(--bg); }
+  .msg{ max-width:85%; padding:10px 13px; border-radius:12px; font-size:0.9rem; line-height:1.5; white-space:pre-wrap; }
+  .msg.bot{ background:#fff; border:1px solid var(--line); color:var(--ink); align-self:flex-start; border-bottom-left-radius:3px; }
+  .msg.user{ background:var(--navy); color:#fff; align-self:flex-end; border-bottom-right-radius:3px; }
+  .msg.system{ align-self:center; color:var(--slate); font-size:0.78rem; text-align:center; }
+  .typing{ display:flex; gap:4px; padding:4px 2px; }
+  .typing span{ width:6px; height:6px; border-radius:50%; background:var(--slate); opacity:0.4; animation:blink 1.2s infinite; }
+  .typing span:nth-child(2){ animation-delay:.2s; } .typing span:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink{ 0%,80%,100%{opacity:.3;} 40%{opacity:1;} }
+
+  .chat-input-row{ display:flex; gap:8px; padding:14px; border-top:1px solid var(--line); background:#fff; }
+  .chat-input-row input{ flex:1; border:1px solid var(--line); border-radius:22px; padding:11px 16px; font-size:0.92rem; font-family:inherit; }
+  .chat-send{ width:42px; height:42px; border-radius:50%; background:var(--navy); border:none; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .chat-send svg{ width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; }
+
+  #pricingModal{
+    position:fixed; inset:0; z-index:300; background:rgba(11,26,38,0.55);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #pricingModal.open{ display:flex; }
+  .pricing-card{ background:#fff; border-radius:18px; padding:28px; max-width:380px; width:100%; max-height:86vh; overflow-y:auto; }
+  .pricing-card h3{ font-family:var(--serif); color:var(--navy); font-size:1.25rem; margin-bottom:6px; }
+  .pricing-card > p{ color:var(--slate); font-size:0.88rem; margin-bottom:18px; }
+  .plan-row{ display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--line); }
+  .plan-row:last-of-type{ border-bottom:none; }
+  .plan-name{ font-weight:600; color:var(--navy); font-size:0.94rem; }
+  .plan-desc{ color:var(--slate); font-size:0.78rem; margin-top:2px; }
+  .plan-buy{ background:var(--orange); color:var(--navy-deep); border:none; padding:9px 16px; border-radius:8px; font-weight:700; font-size:0.86rem; white-space:nowrap; }
+  .pricing-close{ margin-top:18px; width:100%; background:var(--bg); border:1px solid var(--line); padding:11px; border-radius:9px; color:var(--slate); font-weight:600; font-size:0.88rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap nav">
+    <a href="#top" class="brand"><span class="dot"></span>ThesisPoint</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#quote" class="nav-cta">Start an order</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Student research support</div>
+        <h1>Research help, without the <em>campus visit.</em></h1>
+        <p class="hero-sub">Questionnaire design, SPSS/Excel data analysis, and academic writing support — ordered online, reviewed by the founder, and delivered straight to your phone or inbox.</p>
+        <p class="hero-meta">Built for <strong>Hensard University</strong> &amp; <strong>University of Africa, Toru-Orua</strong> students</p>
+        <div class="stat-row">
+          <div class="stat"><b>4</b><span>core services</span></div>
+          <div class="stat"><b>100%</b><span>reviewed before delivery</span></div>
+          <div class="stat"><b>0</b><span>office visits needed</span></div>
+        </div>
+      </div>
+
+      <div class="quote-card" id="quote">
+        <div class="quote-head">
+          <h3>Get a quick estimate</h3>
+          <p>No account, no forms to print — answer two questions.</p>
+        </div>
+
+        <div class="field select-wrap">
+          <label for="svc">What do you need?</label>
+          <select id="svc">
+            <option value="basic">Data Analysis — Basic</option>
+            <option value="advanced">Data Analysis — Advanced</option>
+            <option value="quest">Questionnaire Design</option>
+            <option value="writing">Academic Writing / Editing</option>
+            <option value="full">Full Project &amp; Thesis Package</option>
+          </select>
+        </div>
+
+        <div class="field select-wrap">
+          <label for="deadline">When do you need it?</label>
+          <select id="deadline">
+            <option value="standard">Standard (5–7 days)</option>
+            <option value="rush">Rush (48 hours)</option>
+          </select>
+        </div>
+
+        <div class="quote-result">
+          <div class="label">Estimated price</div>
+          <div class="price" id="priceOut">₦5,000 – ₦8,000 <span>/ job</span></div>
+          <div class="quote-note" id="priceNote">Standard turnaround, final price confirmed after reviewing your requirements.</div>
+        </div>
+
+        <a class="quote-cta" id="waLink" href="#" target="_blank" rel="noopener">
+          Continue on WhatsApp
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">What we offer</div>
+        <h2>Four core services, ordered individually or as one package</h2>
+        <p>Every job — however small — is reviewed by the founder before it reaches you.</p>
+      </div>
+      <div class="svc-grid">
+        <div class="svc-card">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M4 20V10M12 20V4M20 20v-7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Data Analysis Support</h4>
+          <p>Cleaning, coding, and analyzing data in SPSS/Excel, with clear tables and charts you can explain to your supervisor.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z M6 6h12v14H6z M9 11h6M9 15h6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Questionnaire &amp; Instrument Design</h4>
+          <p>Well-structured questionnaires and interview guides, designed so the data they generate is easy to analyze.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M4 20l4.5-1.2L19 8.3a1.5 1.5 0 0 0 0-2.1l-1.2-1.2a1.5 1.5 0 0 0-2.1 0L5.2 15.5 4 20z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Academic Writing &amp; Editing</h4>
+          <p>Structuring Results and Discussion chapters; clarity, grammar, and APA/Harvard referencing.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 3l8 4-8 4-8-4 8-4z M4 11l8 4 8-4 M4 15l8 4 8-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Full Project &amp; Thesis Package</h4>
+          <p>End-to-end support — instrument design through analysis to final write-up — one point of contact.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Going digital</div>
+        <h2>Four steps, entirely online</h2>
+        <p>No campus visit required — order, pay, consult, and receive your work wherever you are.</p>
+      </div>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <h4>Submit your order</h4>
+          <p>Tell us what you need above — service, deadline, and a short description of your project.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <h4>Pay securely</h4>
+          <p>Confirm by bank transfer — instant confirmation, no in-person cash handling.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <h4>Talk it through</h4>
+          <p>A quick chat or call to confirm requirements, then we get to work.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">4</div>
+          <h4>Receive your work</h4>
+          <p>Delivered to your email or WhatsApp — reviewed by the founder before it reaches you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Business model</div>
+        <h2>Priced per job — no subscriptions, no hidden fees</h2>
+      </div>
+      <table class="price-table">
+        <thead>
+          <tr><th>Service</th><th>Price range (₦)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="svc-name">Data Analysis — Basic</div><div class="svc-desc">Descriptive stats, simple charts, Excel/SPSS</div></td>
+            <td>5,000 – 8,000</td>
+          </tr>
+          <tr>
+            <td><div class="svc-name">Data Analysis — Advanced</div><div class="svc-desc">Regression, ANOVA, hypothesis testing</div></td>
+            <td>10,000 – 15,000</td>
+          </tr>
+          <tr>
+            <td><div class="svc-name">Questionnaire Design</div><div class="svc-desc">Structured instrument for projects/theses</div></td>
+            <td>3,000 – 6,000</td>
+          </tr>
+          <tr>
+            <td><div class="svc-name">Academic Writing / Editing</div><div class="svc-desc">Structuring, grammar, referencing</div></td>
+            <td>3,000 – 8,000</td>
+          </tr>
+          <tr class="featured">
+            <td><div class="svc-name">Full Package</div><div class="svc-desc">Instrument + Analysis + Write-up, end to end</div></td>
+            <td>18,000 – 30,000</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="price-note">Final quotes depend on scope and deadline — the estimate above gives you a starting point before we confirm together.</p>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Why ThesisPoint</div>
+        <h2>Structured and accountable, where informal help falls short</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><h4>Real technical credibility</h4><p>Built on the founder's own analytical and research background — not outsourced labor.</p></div>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><h4>Structured &amp; reviewed</h4><p>Every job reviewed before delivery — versus the informal "data analysis guy."</p></div>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><h4>One bundled service</h4><p>Instrument design, analysis, and writing — no juggling multiple unreliable helpers.</p></div>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><h4>Low overhead, wide reach</h4><p>Student team, no office — affordable pricing, reach beyond one campus via WhatsApp &amp; social.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#top" class="brand"><span class="dot"></span>ThesisPoint</a>
+        <p>Student research, data analysis, and academic writing support — from Toru-Orua outward.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Reach us</h5>
+        <a href="https://wa.me/2340000000000" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L4 20l1.1-4.4A8.5 8.5 0 1 1 21 11.5z"/></svg>
+          WhatsApp Business
+        </a>
+        <a href="mailto:hello@thesispoint.ng">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z M4 7l8 6 8-6"/></svg>
+          hello@thesispoint.ng
+        </a>
+        <a href="#" onclick="return false;">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.2"/><circle cx="16.4" cy="7.6" r="0.6" fill="currentColor"/></svg>
+          Instagram / Facebook / X
+        </a>
+      </div>
+      <div class="foot-col">
+        <h5>ThesisPoint</h5>
+        <a href="#services">Services</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>David Akpoaresine Timipere · Agricultural Economics · Hensard University</span>
+      <span>Practice site — for demonstration purposes</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AI CHAT WIDGET -->
+<button id="chatToggle" aria-label="Chat with ThesisPoint AI">
+  <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L4 20l1.1-4.4A8.5 8.5 0 1 1 21 11.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<div id="chatPanel">
+  <div class="chat-head">
+    <div>ThesisPoint AI<span id="modeLabel">Free mode — quick questions</span></div>
+    <button class="chat-close" id="chatClose"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></button>
+  </div>
+  <div id="chatMessages">
+    <div class="msg bot">Hi! Ask me about ThesisPoint's services, pricing, or the founder — free. Ask me to write or generate something for you, and I'll show you premium options.</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Type a message…" />
+    <button class="chat-send" id="chatSend"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div>
+
+<!-- PREMIUM PRICING MODAL -->
+<div id="pricingModal">
+  <div class="pricing-card">
+    <h3>Unlock full AI generation</h3>
+    <p>Free mode only answers questions. Unlock premium to have the AI write your questionnaire, essay, or analysis in full.</p>
+
+    <div class="plan-row">
+      <div><div class="plan-name">Single task</div><div class="plan-desc">One document, 1 hour access</div></div>
+      <button class="plan-buy" data-plan="task" data-amount="200000">₦2,000</button>
+    </div>
+    <div class="plan-row">
+      <div><div class="plan-name">Weekly</div><div class="plan-desc">Unlimited generations, 7 days</div></div>
+      <button class="plan-buy" data-plan="weekly" data-amount="700000">₦7,000</button>
+    </div>
+    <div class="plan-row">
+      <div><div class="plan-name">Monthly</div><div class="plan-desc">Unlimited generations, 30 days</div></div>
+      <button class="plan-buy" data-plan="monthly" data-amount="1000000">₦10,000</button>
+    </div>
+    <div class="plan-row">
+      <div><div class="plan-name">Yearly</div><div class="plan-desc">Unlimited generations, 365 days</div></div>
+      <button class="plan-buy" data-plan="yearly" data-amount="4000000">₦40,000</button>
+    </div>
+
+    <button class="pricing-close" id="pricingClose">Not now</button>
+  </div>
+</div>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  // ---- Config ----
+  const PAYSTACK_PUBLIC_KEY = 'pk_live_REPLACE_WITH_YOUR_PUBLIC_KEY'; // safe to expose — this is the PUBLIC key only
+  const CUSTOMER_EMAIL_FALLBACK = 'customer@thesispoint.ng'; // used if we don't ask the user for their email
+
+  // ---- Elements ----
+  const chatToggle = document.getElementById('chatToggle');
+  const chatPanel = document.getElementById('chatPanel');
+  const chatClose = document.getElementById('chatClose');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  const modeLabel = document.getElementById('modeLabel');
+  const pricingModal = document.getElementById('pricingModal');
+  const pricingClose = document.getElementById('pricingClose');
+
+  chatToggle.addEventListener('click', () => { chatPanel.classList.add('open'); chatInput.focus(); });
+  chatClose.addEventListener('click', () => chatPanel.classList.remove('open'));
+  pricingClose.addEventListener('click', () => pricingModal.classList.remove('open'));
+
+  // ---- Token (proof of payment) storage ----
+  function getToken(){
+    const raw = localStorage.getItem('tp_token');
+    const exp = Number(localStorage.getItem('tp_token_exp') || 0);
+    if (!raw || Date.now() > exp) return null;
+    return raw;
+  }
+  function setToken(token, exp, plan){
+    localStorage.setItem('tp_token', token);
+    localStorage.setItem('tp_token_exp', String(exp));
+    modeLabel.textContent = `Premium (${plan}) — active`;
+  }
+  if (getToken()) modeLabel.textContent = 'Premium — active';
+
+  // ---- Chat rendering ----
+  function addMessage(text, cls){
+    const div = document.createElement('div');
+    div.className = 'msg ' + cls;
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+  function addTyping(){
+    const div = document.createElement('div');
+    div.className = 'msg bot typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  async function sendMessage(){
+    const text = chatInput.value.trim();
+    if (!text) return;
+    addMessage(text, 'user');
+    chatInput.value = '';
+    const typingEl = addTyping();
+
+    try {
+      const resp = await fetch('/.netlify/functions/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, token: getToken() }),
+      });
+      const data = await resp.json();
+      typingEl.remove();
+
+      if (data.premiumRequired) {
+        addMessage("That needs premium — here's the AI writing your work in full, not just describing it. Pick a plan below.", 'bot');
+        pricingModal.classList.add('open');
+        return;
+      }
+      if (data.error) {
+        addMessage("Sorry, something went wrong on our end. Please try again shortly.", 'bot');
+        return;
+      }
+      addMessage(data.reply || "Sorry, I didn't catch that.", 'bot');
+    } catch (err) {
+      typingEl.remove();
+      addMessage("Connection issue — please check your internet and try again.", 'bot');
+    }
+  }
+
+  chatSend.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+  // ---- Payment (Paystack) ----
+  document.querySelectorAll('.plan-buy').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const plan = btn.dataset.plan;
+      const amount = Number(btn.dataset.amount); // kobo
+      const handler = PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: CUSTOMER_EMAIL_FALLBACK,
+        amount: amount,
+        currency: 'NGN',
+        ref: 'tp_' + plan + '_' + Date.now(),
+        callback: function(response){
+          fetch('/.netlify/functions/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reference: response.reference, plan }),
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.token) {
+                setToken(data.token, data.exp, plan);
+                pricingModal.classList.remove('open');
+                addMessage('Payment confirmed — premium is unlocked. Go ahead and ask for your document.', 'bot');
+              } else {
+                addMessage('Payment could not be verified. Please contact us on WhatsApp if you were charged.', 'bot');
+              }
+            });
+        },
+        onClose: function(){},
+      });
+      handler.openIframe();
+    });
+  });
+</script>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  }));
+
+  // Quote calculator
+  const prices = {
+    basic:    { label: 'Data Analysis — Basic', low: 5000, high: 8000 },
+    advanced: { label: 'Data Analysis — Advanced', low: 10000, high: 15000 },
+    quest:    { label: 'Questionnaire Design', low: 3000, high: 6000 },
+    writing:  { label: 'Academic Writing / Editing', low: 3000, high: 8000 },
+    full:     { label: 'Full Project & Thesis Package', low: 18000, high: 30000 }
+  };
+
+  const svcEl = document.getElementById('svc');
+  const deadlineEl = document.getElementById('deadline');
+  const priceOut = document.getElementById('priceOut');
+  const priceNote = document.getElementById('priceNote');
+  const waLink = document.getElementById('waLink');
+
+  function fmt(n){ return '₦' + n.toLocaleString('en-NG'); }
+
+  function updateQuote(){
+    const svc = prices[svcEl.value];
+    const rush = deadlineEl.value === 'rush';
+    const mult = rush ? 1.25 : 1;
+    const low = Math.round(svc.low * mult);
+    const high = Math.round(svc.high * mult);
+    priceOut.innerHTML = fmt(low) + ' – ' + fmt(high) + ' <span>/ job</span>';
+    priceNote.textContent = rush
+      ? '48-hour rush turnaround, final price confirmed after reviewing your requirements.'
+      : 'Standard turnaround (5–7 days), final price confirmed after reviewing your requirements.';
+
+    const message = `Hi ThesisPoint, I'd like to order: ${svc.label} (${rush ? 'Rush – 48 hours' : 'Standard – 5–7 days'}). Estimated ${fmt(low)}–${fmt(high)}.`;
+    waLink.href = 'https://wa.me/2340000000000?text=' + encodeURIComponent(message);
+  }
+
+  svcEl.addEventListener('change', updateQuote);
+  deadlineEl.addEventListener('change', updateQuote);
+  updateQuote();
+</script>
+
+</body>
+</html>
